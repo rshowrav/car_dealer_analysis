@@ -1,0 +1,50 @@
+---
+title: "Sentiment Data"
+output: html_document
+---
+
+GOAL: Extract sentiment dataset from the website https://www.dealerrater.com/. Filters applied were Oklahoma City dealers and within a radius of 250 miles. Will extract headlines from reviews for sentiment analysis. 
+
+Installing Packages in R (Only if not previously installed). Using rvest to get CSS selectors. Using dplyr to use pipe (if/then) functions.
+
+```{r}
+#install.packages("rvest")
+#install.packages("dplyr")
+```
+
+Loading Necessary Libraries to R from above packages.
+
+```{r}
+library(rvest)
+library(dplyr)
+```
+
+Creating an eempty dataframe to store captured data in tabular format
+
+```{r}
+sentiment_data = data.frame()
+```
+
+
+Scraping the first 11 pages (note: site as 12 pages) for ratings and reviews from site.
+
+```{r}
+for (pgnum in seq(from = 1, to = 11, by = 1)){
+  link = paste0("https://www.dealerrater.com/directory/73127/Used-Car-Dealer/250/page",
+                pgnum, "/?typedCriteria=73127&MinRating=1")
+  page = read_html(link)
+  
+  rating = page %>% html_nodes(".rating-info") %>% html_text()
+  review = page %>% html_nodes(".review-snippet") %>% html_text()
+  
+  sentiment_data = rbind(sentiment_data,data.frame(rating,review))
+  
+}
+```
+
+Writing data to a csv
+
+```{r}
+write.csv(sentiment_data, "dealer_review_data.csv", row.names = FALSE)
+```
+

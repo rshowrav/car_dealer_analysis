@@ -1,0 +1,46 @@
+---
+title: "Data Consolidation"
+output: html_document
+---
+
+Goal: This step will consolidate all the web scrapred datafiles in prior step for sedans, hatchbacks, and SUVs into one csv file.
+
+Installing Packages in R (Only if not previously installed). Using sqldf packages, which is a package that allows using Structured Query Language(SQL) in R. SQL is a lanaguage that allow to extract column and row data for a sturctured dataset (i.e. one with rows and columns)
+
+```{r}
+install.packages("sqldf")
+```
+
+Loading Necessary Libraries to R from above packages.
+
+```{r}
+library(sqldf)
+```
+
+Reading the datasets into a dataframe
+
+```{r}
+sedan = read.csv("sedan_data.csv", header = TRUE)
+hatchback = read.csv("hatchback_data.csv", header = TRUE)
+suv = read.csv("suv_data.csv", header = TRUE)
+
+```
+
+Running the below sql query to combine the above datafiles and create a column body_type to tell the difference of which file it came from
+
+```{r}
+unclean_truecar_data = sqldf("SELECT *, 'sedan' as body_type FROM sedan
+                             union
+                             SELECT *, 'hatchback' as body_type FROM hatchback
+                             union
+                             SELECT *, 'SUV' as body_type FROM suv")
+```
+
+
+Writing file obtained to a csv file.
+
+```{r}
+
+write.csv(unclean_truecar_data, "unclean_truecar_data.csv", row.names = FALSE)
+
+```

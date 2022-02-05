@@ -1,0 +1,584 @@
+---
+title: "Full Website Scrape"
+output: html_document
+---
+
+GOAL: Get an output based on the iteration of multiple page of used cars on truecar.com. Using the filters 250 miles from Oklahoma City and Maxium price of $30,000. Other filters applied on site are only limiting from year 2009 to 2019. Note we will also limit to sedans, Hatchbacks, SUVs, 
+
+Installing Packages in R (Only if not previously installed). Using rvest to get CSS selectors. Using dplyr to use pipe (if/then) functions.
+Using data.table to store data in a tablular format. Using RSelinium along with a virtual environment called a docker container to avoid timeout issues
+when scraping from website.
+
+```{r}
+#install.packages("rvest")
+#install.packages("dplyr")
+#install.packages("data.table")
+#install.packages("RSelenium")
+```
+
+Loading Necessary Libraries to R from above packages.
+
+```{r}
+library(rvest)
+library(dplyr)
+library(RSelenium)
+library(data.table)
+```
+
+Creating empty data frames to store data in tabular format.
+
+```{r}
+
+site_list1 = data.frame()
+site_list2 = data.frame()
+site_list3 = data.frame()
+site_list4 = data.frame()
+site_list5 = data.frame()
+```
+
+
+Getting site links to access details about vehicle from 5 different iterations of 10 pages each from different areas to get a wide sampleset. 
+Note each page has about 30 cars. This step is only capturing the sedans
+
+```{r}
+for (pgnum in seq(from = 1, to = 10, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-sedan/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  site_list1 = rbind(site_list1, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 101, to = 110, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-sedan/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  site_list2 = rbind(site_list2, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 201, to = 210, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-sedan/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  site_list3 = rbind(site_list3, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 301, to = 310, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-sedan/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  site_list4 = rbind(site_list4, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 401, to = 410, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-sedan/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  site_list5 = rbind(site_list5, data.frame(site_link))
+}
+
+
+```
+
+
+Combining the data frame of each of the above iterations. Note only keeping distinct site links to scrape. Converting dataframe to a 
+matrix to use as list.
+
+```{r}
+site_list_df = rbind(site_list1, site_list2, site_list3, site_list4, site_list5)
+site_list_df = site_list_df %>% distinct()
+site_list = as.matrix(site_list_df)
+
+```
+
+Creating an empty data table to be used to store vehicle information 
+
+```{r}
+car_dt_full = data.table()
+```
+
+
+Iterating through all site links obtained and gathering all vehicle details possible from the website using CSS selectors. Populating all results to the emtpty data table (car_dt_full). Note using rbind (i.e. row bind) not to lose prior records. Also, some records are lost as truecar took down some of the links as it was being scraped.
+
+```{r}
+for (i in seq(from = 1, to = 1233, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+remDr$open()
+remDr$setTimeout(type="page load", milliseconds = 100000)
+remDr$navigate(site_list[i])
+page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+
+vehicle_year_name = page %>% html_nodes(".margin-right-sm-3") %>% html_text()
+vehicle_style = page %>% html_nodes(".col-lg-6:nth-child(2) li") %>% html_text()
+site_rating = page %>% html_nodes(".graph-icon-title") %>% html_text()
+vehicle_price = page %>% html_nodes(".label-block-text span") %>% html_text()
+vehicle_mileage = page %>% html_nodes(".col-lg-6:nth-child(9) li") %>% html_text()
+vehicle_location = page %>% html_nodes(".margin-top-1 li:nth-child(1)") %>% html_text()
+vehicle_ext_color = page %>% html_nodes(".col-lg-6:nth-child(1) li") %>% html_text()
+vehicle_int_color = page %>% html_nodes(".col-lg-6:nth-child(3) li") %>% html_text()
+vehicle_accident_count = page %>% html_nodes(".col:nth-child(1) .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_title_type = page %>% html_nodes(".col+ .col .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_mpg = page %>% html_nodes(".col-lg-6:nth-child(4) li") %>% html_text()
+vehicle_transmission = page %>% html_nodes(".col-lg-6:nth-child(6) li") %>% html_text()
+vehicle_fuel_type = page %>% html_nodes(".col-lg-6:nth-child(8) li") %>% html_text()
+vehicle_options_level = page %>% html_nodes(".col-lg-6:nth-child(10) li") %>% html_text()
+vehicle_engine = page %>% html_nodes(".col-lg-6:nth-child(5) li") %>% html_text()
+vehicle_drive_type = page %>% html_nodes(".col-lg-6:nth-child(7) li") %>% html_text()
+vehicle_usage_type = page %>% html_nodes(".col:nth-child(1) .padding-1+ .padding-1 ._h9wfdq") %>% html_text()
+
+remDr$quit()
+
+car_dt_full = rbind(car_dt_full, data.table(vehicle_year_name, vehicle_style, site_rating, vehicle_price, vehicle_mileage,
+                         vehicle_location, vehicle_ext_color, vehicle_int_color, vehicle_accident_count,
+                         vehicle_title_type, vehicle_mpg, vehicle_transmission, vehicle_fuel_type, 
+                         vehicle_options_level, vehicle_engine, vehicle_drive_type, vehicle_usage_type))
+  
+}
+```
+
+
+Writing file obtained to a csv file.
+
+```{r}
+
+write.csv(car_dt_full, "sedan_data.csv", row.names = FALSE)
+
+```
+
+
+Creating empty data frames to store data in tabular format.
+
+```{r}
+
+hb_site_list1 = data.frame()
+hb_site_list2 = data.frame()
+hb_site_list3 = data.frame()
+hb_site_list4 = data.frame()
+hb_site_list5 = data.frame()
+```
+
+
+Getting site links to access details about vehicle from 5 different iterations of 10 pages each from different areas to get a wide sampleset. 
+Note each page has about 30 cars. This step is only capturing the Hatchbacks.
+
+```{r}
+for (pgnum in seq(from = 1, to = 10, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-hatchback/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  hb_site_list1 = rbind(hb_site_list1, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 31, to = 40, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-hatchback/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  hb_site_list2 = rbind(hb_site_list2, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 51, to = 60, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-hatchback/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  hb_site_list3 = rbind(hb_site_list3, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 21, to = 30, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-hatchback/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  hb_site_list4 = rbind(hb_site_list4, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 61, to = 70, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-hatchback/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  hb_site_list5 = rbind(hb_site_list5, data.frame(site_link))
+}
+
+
+```
+
+
+Combining the data frame of each of the above iterations. Note only keeping distinct site links to scrape. Converting dataframe to a 
+matrix to use as list.
+
+```{r}
+hb_site_list_df = rbind(hb_site_list1, hb_site_list2, hb_site_list3, hb_site_list4, hb_site_list5)
+hb_site_list_df = hb_site_list_df %>% distinct()
+hb_site_list = as.matrix(hb_site_list_df)
+
+```
+
+Creating an empty data table to be used to store vehicle information 
+
+```{r}
+hb_dt_full = data.table()
+```
+
+
+Iterating through all site links obtained and gathering all vehicle details possible from the website using CSS selectors. Populating all results to the emtpty data table (hb_dt_full). Note using rbind (i.e. row bind) not to lose prior records. Also, some records are lost as truecar took down some of the links as it was being scraped.
+
+```{r}
+for (i in seq(from = 1, to = 1221, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+remDr$open()
+remDr$setTimeout(type="page load", milliseconds = 100000)
+remDr$navigate(hb_site_list[i])
+page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+
+vehicle_year_name = page %>% html_nodes(".margin-right-sm-3") %>% html_text()
+vehicle_style = page %>% html_nodes(".col-lg-6:nth-child(2) li") %>% html_text()
+site_rating = page %>% html_nodes(".graph-icon-title") %>% html_text()
+vehicle_price = page %>% html_nodes(".label-block-text span") %>% html_text()
+vehicle_mileage = page %>% html_nodes(".col-lg-6:nth-child(9) li") %>% html_text()
+vehicle_location = page %>% html_nodes(".margin-top-1 li:nth-child(1)") %>% html_text()
+vehicle_ext_color = page %>% html_nodes(".col-lg-6:nth-child(1) li") %>% html_text()
+vehicle_int_color = page %>% html_nodes(".col-lg-6:nth-child(3) li") %>% html_text()
+vehicle_accident_count = page %>% html_nodes(".col:nth-child(1) .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_title_type = page %>% html_nodes(".col+ .col .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_mpg = page %>% html_nodes(".col-lg-6:nth-child(4) li") %>% html_text()
+vehicle_transmission = page %>% html_nodes(".col-lg-6:nth-child(6) li") %>% html_text()
+vehicle_fuel_type = page %>% html_nodes(".col-lg-6:nth-child(8) li") %>% html_text()
+vehicle_options_level = page %>% html_nodes(".col-lg-6:nth-child(10) li") %>% html_text()
+vehicle_engine = page %>% html_nodes(".col-lg-6:nth-child(5) li") %>% html_text()
+vehicle_drive_type = page %>% html_nodes(".col-lg-6:nth-child(7) li") %>% html_text()
+vehicle_usage_type = page %>% html_nodes(".col:nth-child(1) .padding-1+ .padding-1 ._h9wfdq") %>% html_text()
+
+
+remDr$quit()
+
+hb_dt_full = rbind(hb_dt_full, data.table(vehicle_year_name, vehicle_style, site_rating, vehicle_price, vehicle_mileage,
+                         vehicle_location, vehicle_ext_color, vehicle_int_color, vehicle_accident_count,
+                         vehicle_title_type, vehicle_mpg, vehicle_transmission, vehicle_fuel_type, 
+                         vehicle_options_level, vehicle_engine, vehicle_drive_type, vehicle_usage_type))
+  
+}
+```
+
+Writing file obtained to a csv file.
+
+```{r}
+
+write.csv(hb_dt_full, "hatchback_data.csv", row.names = FALSE)
+
+```
+
+Creating empty data frames to store data in tabular format.
+
+```{r}
+
+suv_site_list1 = data.frame()
+suv_site_list2 = data.frame()
+suv_site_list3 = data.frame()
+suv_site_list4 = data.frame()
+suv_site_list5 = data.frame()
+```
+
+
+Getting site links to access details about vehicle from 5 different iterations of 10 pages each from different areas to get a wide sampleset. 
+Note each page has about 30 cars. This step is only capturing the SUVs.
+
+```{r}
+for (pgnum in seq(from = 1, to = 10, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-suv/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  suv_site_list1 = rbind(suv_site_list1, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 101, to = 110, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-suv/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  suv_site_list2 = rbind(suv_site_list2, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 201, to = 210, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-suv/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  suv_site_list3 = rbind(suv_site_list3, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 301, to = 310, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-suv/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  suv_site_list4 = rbind(suv_site_list4, data.frame(site_link))
+}
+
+```
+
+```{r}
+for (pgnum in seq(from = 401, to = 410, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+  remDr$open()
+  remDr$setTimeout(type="page load", milliseconds = 100000)
+  remDr$navigate(paste0("https://www.truecar.com/used-cars-for-sale/listings/year-2009-2019/body-suv/price-below-30000/location-oklahoma-city-ok/?page=", pgnum,"&searchRadius=250&sort[]=best_match"))
+  page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+  
+  site_link = page %>% html_nodes(".card-1") %>% html_attr("href") %>% 
+  paste("https://www.truecar.com", ., sep = "")
+ 
+  
+  remDr$quit()   
+  suv_site_list5 = rbind(suv_site_list5, data.frame(site_link))
+}
+
+
+```
+
+
+Combining the data frame of each of the above iterations. Note only keeping distinct site links to scrape. Converting dataframe to a 
+matrix to use as list.
+
+```{r}
+suv_site_list_df = rbind(suv_site_list1, suv_site_list2, suv_site_list3, suv_site_list4, suv_site_list5)
+suv_site_list_df = suv_site_list_df %>% distinct()
+suv_site_list = as.matrix(suv_site_list_df)
+
+```
+
+Creating an empty data table to be used to store vehicle information 
+
+```{r}
+suv_dt_full = data.table()
+```
+
+
+Iterating through all site links obtained and gathering all vehicle details possible from the website using CSS selectors. Populating all results to the emtpty data table (suv_dt_full). Note using rbind (i.e. row bind) not to lose prior records. Also, some records are lost as truecar took down some of the links as it was being scraped.
+
+```{r}
+for (i in seq(from = 1, to = 1229, by = 1)){
+  remDr = RSelenium::remoteDriver(remoteServerAddr = "192.168.99.100",
+                                 port = 4445L,
+                                 browserName = "chrome")
+remDr$open()
+remDr$setTimeout(type="page load", milliseconds = 100000)
+remDr$navigate(suv_site_list[i])
+page = remDr$getPageSource() %>% .[[1]] %>% read_html()
+
+vehicle_year_name = page %>% html_nodes(".margin-right-sm-3") %>% html_text()
+vehicle_style = page %>% html_nodes(".col-lg-6:nth-child(2) li") %>% html_text()
+site_rating = page %>% html_nodes(".graph-icon-title") %>% html_text()
+vehicle_price = page %>% html_nodes(".label-block-text span") %>% html_text()
+vehicle_mileage = page %>% html_nodes(".col-lg-6:nth-child(9) li") %>% html_text()
+vehicle_location = page %>% html_nodes(".margin-top-1 li:nth-child(1)") %>% html_text()
+vehicle_ext_color = page %>% html_nodes(".col-lg-6:nth-child(1) li") %>% html_text()
+vehicle_int_color = page %>% html_nodes(".col-lg-6:nth-child(3) li") %>% html_text()
+vehicle_accident_count = page %>% html_nodes(".col:nth-child(1) .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_title_type = page %>% html_nodes(".col+ .col .padding-1:nth-child(1) ._h9wfdq") %>% html_text()
+vehicle_mpg = page %>% html_nodes(".col-lg-6:nth-child(4) li") %>% html_text()
+vehicle_transmission = page %>% html_nodes(".col-lg-6:nth-child(6) li") %>% html_text()
+vehicle_fuel_type = page %>% html_nodes(".col-lg-6:nth-child(8) li") %>% html_text()
+vehicle_options_level = page %>% html_nodes(".col-lg-6:nth-child(10) li") %>% html_text()
+vehicle_engine = page %>% html_nodes(".col-lg-6:nth-child(5) li") %>% html_text()
+vehicle_drive_type = page %>% html_nodes(".col-lg-6:nth-child(7) li") %>% html_text()
+vehicle_usage_type = page %>% html_nodes(".col:nth-child(1) .padding-1+ .padding-1 ._h9wfdq") %>% html_text()
+
+
+remDr$quit()
+
+suv_dt_full = rbind(suv_dt_full, data.table(vehicle_year_name, vehicle_style, site_rating, vehicle_price, vehicle_mileage,
+                         vehicle_location, vehicle_ext_color, vehicle_int_color, vehicle_accident_count,
+                         vehicle_title_type, vehicle_mpg, vehicle_transmission, vehicle_fuel_type, 
+                         vehicle_options_level, vehicle_engine, vehicle_drive_type, vehicle_usage_type))
+  
+}
+```
+
+Writing file obtained to a csv file.
+
+```{r}
+
+write.csv(suv_dt_full, "suv_data.csv", row.names = FALSE)
+
+```
+
+Consoladating all site links to one csv
+
+```{r}
+site_links = rbind(site_list, suv_site_list, hb_site_list)
+write.csv(site_links, "site_links.csv", row.names = FALSE)
+```
+
